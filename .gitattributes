@@ -3,3 +3,6 @@
 notshipped/ export-ignore
 .gitattributes export-ignore
 .pkgmeta export-ignore
+
+# Images: never touch line endings
+*.tga binary

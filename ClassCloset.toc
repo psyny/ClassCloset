@@ -4,7 +4,7 @@
 ## Author: Psyny
 ## Version: 0.1.0
 ## DefaultState: enabled
-## IconTexture: Interface\Icons\INV_Chest_Cloth_17
+## IconTexture: Interface\AddOns\ClassCloset\Icons\logo
 
 ## SavedVariables: ClassClosetDB
 
