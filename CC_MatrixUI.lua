@@ -540,6 +540,35 @@ function Matrix.Show(key)
     Matrix.Refresh()
 end
 
+-- Opens a set focused on one piece (from the Newest list): the table moves to the
+-- tier and class that have it, and the model wears only that piece.
+function Matrix.Focus(key, sourceID, visualID)
+    Matrix.focus = { sourceID = sourceID, visualID = visualID }
+    Matrix.previewRow = nil
+    Matrix.key = key
+    CC_Window.OpenMatrix(key)
+end
+
+-- The base set and variant holding the focused piece (same item first, else same look).
+local function FindFocus(group, focus)
+    local byLook
+    for _, base in ipairs(group.bases) do
+        for _, variant in ipairs(base.variants) do
+            for _, piece in pairs(Data.GetPieces(variant.setID)) do
+                if piece.sourceID == focus.sourceID then
+                    return base, variant
+                end
+                if not byLook and focus.visualID and piece.visualID == focus.visualID then
+                    byLook = { base, variant }
+                end
+            end
+        end
+    end
+    if byLook then
+        return byLook[1], byLook[2]
+    end
+end
+
 local function UpdateHeader(columns, size)
     local header = Matrix.page.header
     local x = STAR_WIDTH + LABEL_WIDTH
@@ -634,11 +663,43 @@ function Matrix.Refresh()
     page.model:SetShown(db.matrix_model)
     page.tablePanel:SetPoint("RIGHT", page, "RIGHT", db.matrix_model and -(MODEL_WIDTH + 10) or 0, 0)
 
+    -- Focused piece: show the tier that has it.
+    local focus = Matrix.focus
+    local focusBase, focusVariant
+    if focus then
+        focusBase, focusVariant = FindFocus(group, focus)
+        if focusVariant and not db.show_tiers then
+            local tier = focusVariant.description or ""
+            db.tier_choice[group.key] = tier
+            page.tier:SetValue(tier)
+        end
+    end
+
     local columns = Columns(group)
     local size = db.icon_size
     local rows = BuildRows(group, columns)
     page.data = { rows = rows, columns = columns, size = size }
     UpdateHeader(columns, size)
+
+    -- Focused piece: select its row, and the model wears only that piece.
+    if focus then
+        Matrix.focus = nil
+        local name
+        for _, data in ipairs(rows) do
+            if focusVariant and data.variant == focusVariant and data.base == focusBase then
+                Matrix.previewRow = { classFile = data.class.file, baseSetID = data.base.setID, setID = data.variant.setID }
+                break
+            end
+        end
+        local info = Utils.Safe(C_TransmogCollection.GetSourceInfo, focus.sourceID)
+        name = info and info.name
+        if not Matrix.previewRow then
+            Matrix.previewRow = { setID = -1 } -- nothing selected, but keep the model as is
+        end
+        page.model:ShowSources({ focus.sourceID }, name or "")
+        Matrix.RefreshRows()
+        return
+    end
 
     -- After a tier change: the same class (and set version) in the new tier.
     if Matrix.retier then

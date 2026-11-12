@@ -66,7 +66,7 @@ local function CreateRow(content)
     row:SetScript("OnLeave", GameTooltip_Hide)
     row:SetScript("OnClick", function(self)
         if self.group then
-            CC_Window.OpenMatrix(self.group.key)
+            CC_MatrixUI.Focus(self.group.key, self.item.sourceID, self.item.visualID)
         end
     end)
     return row
