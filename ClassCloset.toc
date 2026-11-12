@@ -1,0 +1,40 @@
+## Interface: 120000, 120001, 120100, 120105
+## Title: ClassCloset
+## Notes: Track transmog set appearances for every class in one table: which pieces you have and which you are missing.
+## Author: Psyny
+## Version: 0.1.0
+## DefaultState: enabled
+## IconTexture: Interface\Icons\INV_Chest_Cloth_17
+
+## SavedVariables: ClassClosetDB
+
+# Library files
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+#@end-no-lib-strip@
+
+# Locale files
+Locales\Locale-enUS.lua
+
+# Main Files
+CC_Utils.lua
+CC_Data.lua
+CC_History.lua
+CC_Options.lua
+CC_Widgets.lua
+CC_Model.lua
+CC_HomeUI.lua
+CC_PickerUI.lua
+CC_MatrixUI.lua
+CC_NewestUI.lua
+CC_Window.lua
+ClassCloset.lua
